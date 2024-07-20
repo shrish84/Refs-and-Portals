@@ -1,10 +1,22 @@
-import { forwardRef } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
+import { createPortal } from "react-dom";
+
 //we wrap funin forwardRef
 const ResultModal= forwardRef(
  function ResultModal({ targetTime, userLost, formattedRemainingTime, score}, ref) {
-  return (
+  const dialog= useRef();
+
+  useImperativeHandle(ref, () => {
+    return {
+          open(){
+            dialog.current.showModal();
+          }
+    };
+  });//fun will return object, open is custom func, showModal is built-in
+  
+  return createPortal(
     // build in dialog hidden by default so we put open
-    <dialog ref={ref} className="result-modal" >
+    <dialog ref={dialog} className="result-modal" >
       {userLost ? <h2>You lost</h2> : <h2>You score: {score}</h2>}
       <p>
         The target time was <strong>{targetTime} seconds.</strong>
@@ -15,7 +27,8 @@ const ResultModal= forwardRef(
       <form method="dialog">
         <button>Close</button>
       </form>
-    </dialog>
+    </dialog>,
+    document.getElementById("modal")
   );
 })
 export default ResultModal; 

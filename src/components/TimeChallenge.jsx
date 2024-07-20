@@ -12,18 +12,17 @@ function TimeChallenge({ title, targetTime }) {
   if(timeRemaining<=0){
     clearInterval(timer.current);
     setTimeRemaining(targetTime*1000);
-    dialog.current.showModal();
-  }//we manually stop timer because we didn't win
+    dialog.current.open();
+  }//we manually stop timer because we didn't win, we're calling open from here in resultmodal
 
   function handleStart() {
     timer.current= setInterval(() => {
       setTimeRemaining(prevTimeRemaining=> prevTimeRemaining-10);
     }, 10);//triggers after every 10 miliseconds
-    setTimerStarted(true);//will set to true once the time has started
   }
 
   function handleStop(){
-    dialog.current.showModal();
+    dialog.current.open();
     clearInterval(timer.current);//needs id of that timer to stop the timer and it is returned by pointer, if this called earlier than setTimerExpired will remain false
   }
 
